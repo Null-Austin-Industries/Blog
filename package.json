@@ -1,0 +1,31 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "node src/app.js --test",
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Null-Austin-Industries/Blog.git"
+  },
+  "keywords": [
+    "blog",
+    "small",
+    "austin"
+  ],
+  "author": "Austin Moore",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Null-Austin-Industries/Blog/issues"
+  },
+  "homepage": "https://github.com/Null-Austin-Industries/Blog#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "ini": "^5.0.0",
+    "perf_hooks": "^0.0.1",
+    "term-color": "^1.0.1"
+  }
+}
