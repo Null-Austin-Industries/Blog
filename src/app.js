@@ -14,10 +14,11 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 // Third-party Modules (that are not express related)
-const TermColor = require('term-color')
+const TermColor = require('term-color');
 
 // Local Modules
 const endpoints = require('./libs/endpoints');
+const db = require('./libs/db');
 
 // ------------------------------------
 // Configuration

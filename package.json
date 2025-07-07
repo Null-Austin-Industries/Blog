@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Null-Austin-Industries/Blog#readme",
   "dependencies": {
+    "better-sqlite3": "^12.2.0",
     "express": "^5.1.0",
     "ini": "^5.0.0",
     "perf_hooks": "^0.0.1",
