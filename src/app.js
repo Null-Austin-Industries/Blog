@@ -37,6 +37,13 @@ const _config_ = new class{
 // Setting up the backend
 const app = express();
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+app.set('views', path.join(__dirname, 'web'));
+
 // pass the app via the endpoints module
 endpoints(app, _config_);
 
