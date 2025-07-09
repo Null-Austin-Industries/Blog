@@ -1,4 +1,4 @@
-const { performance } = require('perf_hooks');
+const api = require('./apiendpoints');
 class Endpoints{
     constructor(app,_config_){
         this.app = app;
@@ -6,23 +6,13 @@ class Endpoints{
         this.init();
     }
     init(){
-        // Pass off the endpoints
-        // First static endpoints
-
+        // static endpoints
         this.app.get('/',(req,res)=>{
             res.send('lol')
         })
 
-        // Now the dynamic endpoints
-        this.app.get('/api/v1/ping', (req, res) => {
-            const start = performance.now();
-            const end = performance.now();
-            const delay = Math.round(end - start);
-            res.json({
-                message: 'pong',
-                delay: `${delay}ms`
-            });
-        });
+        // api endpoints
+        api(this.app, this.config);
     }
 }
 module.exports = (app, _config_) => {new Endpoints(app, _config_);};
