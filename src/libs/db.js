@@ -49,6 +49,7 @@ class Database{
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             status TEXT DEFAULT 'published',
+            toc TEXT DEFAULT '[]',
             FOREIGN KEY (user_id) REFERENCES ${_config_.database.userTable}(id)
         );`).run();
     }
@@ -93,10 +94,11 @@ class Database{
         constructor(database) {
             this.database = database;
         }
-        createPost(user_id, content, title, display_title, status = 'published') {
-            this.database.db.prepare(
-                `INSERT INTO ${_config_.database.blogsTable} (user_id, content, title, display_title, status) VALUES (?, ?, ?, ?, ?)`
-            ).run(user_id, content, title, display_title, status);
+        createPost(user_id, content, title, display_title, status = 'published', toc = []) {
+            const result = this.database.db.prepare(
+                `INSERT INTO ${_config_.database.blogsTable} (user_id, content, title, display_title, status, toc) VALUES (?, ?, ?, ?, ?, ?)`
+            ).run(user_id, content, title, display_title, status, JSON.stringify(toc));
+            return result.lastInsertRowid;
         }
         getPostById(id) {
             return this.database.db.prepare(

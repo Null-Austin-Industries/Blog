@@ -1,8 +1,72 @@
 // a file that takes in the markdown of text, and converts it to HTML
 const marked = require('marked');
+const JSDOM = require('jsdom').JSDOM;
+const Prism = require('prismjs');
+
+// Load additional language components for syntax highlighting
+require('prismjs/components/prism-javascript');
+require('prismjs/components/prism-typescript');
+require('prismjs/components/prism-python');
+require('prismjs/components/prism-java');
+require('prismjs/components/prism-css');
+require('prismjs/components/prism-json');
+require('prismjs/components/prism-bash');
+require('prismjs/components/prism-sql');
+require('prismjs/components/prism-markdown');
 
 function markdownToHtml(markdown) {
-    // Use marked to convert markdown to HTML
-    return marked.marked(markdown);
+  // Configure marked with extensions for code highlighting
+  marked.use({
+    renderer: {
+      code(token) {
+        // In marked v16, the code renderer receives a token object
+        const code = token.text || token;
+        const language = token.lang || '';
+        
+        if (language && Prism.languages[language]) {
+          try {
+            const highlighted = Prism.highlight(String(code), Prism.languages[language], language);
+            return `<pre class="language-${language}"><code class="language-${language}">${highlighted}</code></pre>`;
+          } catch (err) {
+            console.warn(`Failed to highlight ${language} code:`, err.message);
+            // Fallback to plain code block
+            const escaped = String(code).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<pre><code>${escaped}</code></pre>`;
+          }
+        } else {
+          // Fallback for unknown languages
+          const escaped = String(code).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return `<pre><code>${escaped}</code></pre>`;
+        }
+      },
+      codespan(token) {
+        const code = token.text || token;
+        return `<code class="inline-code">${code}</code>`;
+      }
+    }
+  });
+
+  // Set marked options
+  marked.setOptions({
+    gfm: true, // GitHub Flavored Markdown
+    breaks: true
+  });
+
+  return marked.parse(markdown);
 }
-module.exports = markdownToHtml;
+
+function getTOC(content){
+    // Simplified version - just return basic markdown conversion
+    const html = markdownToHtml(content);
+    return html;
+}
+
+function getEnhancedHtml(content) {
+    // Simplified - just return the HTML without TOC
+    return {
+        html: markdownToHtml(content),
+        toc: []
+    };
+}
+
+module.exports = { markdownToHtml, getTOC, getEnhancedHtml };

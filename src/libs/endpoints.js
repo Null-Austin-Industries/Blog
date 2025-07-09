@@ -2,6 +2,7 @@ const api = require('./apiendpoints');
 const path = require('path');
 let db = require('./db');
 const { read } = require('fs');
+const { markdownToHtml } = require('./md');
 class Endpoints{
     constructor(app,_config_){
         this.app = app;
@@ -12,6 +13,10 @@ class Endpoints{
         // static endpoints
         this.app.get('/',(req,res)=>{
             res.send('lol')
+        })
+
+        this.app.get('/post',(req,res)=>{
+            res.sendFile(path.join(__dirname,'../web/pages/post.html'));
         })
 
         // dynamic endpoints
@@ -49,11 +54,16 @@ class Endpoints{
                 String(date.getDate()).padStart(2, '0');
             let readTime = blog.readTime
             readTime = blog.content.split(' ').length / 200;
+            readTime = Math.ceil(readTime);
+            
+            // Process markdown content
+            const processedContent = markdownToHtml(blog.content);
+            
             res.render(path.join('pages/blog.html'), {
                 blog: {
                     title: blog.title,
                     titledesc: blog.display_title,
-                    content: blog.content,
+                    content: processedContent,
                     date: date,
                     readTime: readTime
                 }

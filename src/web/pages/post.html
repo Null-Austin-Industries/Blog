@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin's Blog - Create Post</title>
+    <link rel="stylesheet" href="/css/blog.css">
+    <style>
+        .post-form {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        
+        .form-group textarea {
+            min-height: 300px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .submit-btn {
+            background: #007acc;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #005a99;
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .preview-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .preview-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+        }
+        
+        .autolink {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #e3f2fd;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .autolink a {
+            color: #007acc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .autolink a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="post-form">
+        <h1>Create New Blog Post</h1>
+        
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="postForm">
+            <div class="form-group">
+                <label for="userId">User ID:</label>
+                <input type="number" id="userId" name="user_id" value="1" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">URL Title (slug):</label>
+                <input type="text" id="title" name="title" placeholder="url-friendly-title" required>
+                <small>This will be used in the URL (e.g., /blog/1/your-title)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="displayTitle">Display Title:</label>
+                <input type="text" id="displayTitle" name="display_title" placeholder="Your Blog Post Title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="1">Published</option>
+                    <option value="0">Draft</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Content (Markdown):</label>
+                <textarea id="content" name="content" placeholder="Write your blog post content in Markdown..." required></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">Create Post</button>
+        </form>
+        
+        <div class="autolink" id="autolink">
+            <strong>Post created successfully!</strong><br>
+            <a href="#" id="postLink" target="_blank">View your post</a>
+        </div>
+        
+        <div class="preview-section">
+            <h3>Live Preview:</h3>
+            <div class="preview-content" id="previewContent">
+                <em>Start typing in the content area to see a preview...</em>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const autolink = document.getElementById('autolink');
+            const postLink = document.getElementById('postLink');
+            
+            // Clear previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            autolink.style.display = 'none';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                const response = await fetch('/api/v1/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    successMessage.textContent = result.message;
+                    successMessage.style.display = 'block';
+                    
+                    // Show autolink using the returned post ID and URL
+                    const postUrl = result.url || `/blog/${data.user_id}/${result.postId}`;
+                    postLink.href = postUrl;
+                    postLink.textContent = `${window.location.origin}${postUrl}`;
+                    autolink.style.display = 'block';
+                    
+                    // Reset form
+                    this.reset();
+                    document.getElementById('previewContent').innerHTML = '<em>Start typing in the content area to see a preview...</em>';
+                } else {
+                    throw new Error(result.message || 'Failed to create post');
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Error: ' + error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Post';
+            }
+        });
+        
+        // Live preview functionality
+        document.getElementById('content').addEventListener('input', function() {
+            const content = this.value;
+            const previewContent = document.getElementById('previewContent');
+            
+            if (content.trim() === '') {
+                previewContent.innerHTML = '<em>Start typing in the content area to see a preview...</em>';
+                return;
+            }
+            
+            // Simple markdown to HTML conversion for preview
+            let html = content
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\*(.*)\*/gim, '<em>$1</em>')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>')
+                .replace(/`([^`]+)`/gim, '<code>$1</code>')
+                .replace(/\n/gim, '<br>');
+            
+            previewContent.innerHTML = html;
+        });
+        
+        // Auto-generate URL slug from display title
+        document.getElementById('displayTitle').addEventListener('input', function() {
+            const titleInput = document.getElementById('title');
+            if (titleInput.value === '') {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim();
+                titleInput.value = slug;
+            }
+        });
+    </script>
+</body>
+</html>

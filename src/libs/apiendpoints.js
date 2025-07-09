@@ -28,19 +28,25 @@ class Endpoints{
         this.app.post('/api/v1/post', (req, res) => {
             // Merge req.body and req.query to support both body and query/form-data
             const source = { ...req.query, ...req.body };
+            source.content = md.markdownToHtml(source.content);
+            source.toc = md.getTOC(source.content);
+            console.log(source.toc)
             let data = [
                 source.user_id || 1,
-                md(source.content) || '',
-                source.display_title || '',
+                source.content || '',
                 source.title || '',
-                source.status || '1'
+                source.display_title || '',
+                source.status || '1',
+                source.toc || []
             ];
             // res.json(data);
             // return;
-            db.blogs.createPost(...data);
+            const postId = db.blogs.createPost(...data);
             res.json({
                 message: 'Post created successfully',
-                data: data
+                data: data,
+                postId: postId,
+                url: `/blog/${source.user_id || 1}/${postId}`
             });
         });
     }
