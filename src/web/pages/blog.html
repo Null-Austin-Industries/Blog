@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Austin's Blog - <% blog.title %></title>
+    <title>Austin's Blog - <%= blog.title %></title>
     <link rel="stylesheet" href="/css/blog.css">
 </head>
 <body>
@@ -11,11 +11,15 @@
         <div id="toc"></div>
         <div id="content">
             <span id="extraInfo" class="inconsolata">
-                <span id="date">2025.0.10&#9654;</span>
-                <span id="time">~10 minutes</span>
-                <!-- <% blog.date %> <% blog.readTime %> -->
+                <span id="date"><%= blog.date %></span>
+                <span id="time">~<%= blog.readTime %> Minutes</span>
             </span>
-            <div id="text">hello mr :D</div>
+            <div id="text">
+                <h1 id="title">
+                    <%= blog.titledesc %>
+                </h1>
+                <p><%= blog.content %></p>
+            </div>
         </div>
     </div>
 </body>

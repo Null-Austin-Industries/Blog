@@ -32,7 +32,15 @@ class Endpoints{
         })
 
         this.app.get('/blog',(req,res)=>{
-            res.sendFile(path.join(__dirname,'../web/pages/blog.html'));
+            res.render(path.join('pages/blog.html'),{
+                blog:{
+                    title:"super cool short name",
+                    titledesc:"this is a longer form of the title",
+                    content:"This is the main content of the blog post.",
+                    date:"2025.01.01",
+                    readTime:"10"
+                }
+            });
         })
 
         // api endpoints
