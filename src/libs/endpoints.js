@@ -1,5 +1,6 @@
 const api = require('./apiendpoints');
 const path = require('path');
+let db = require('./db');
 class Endpoints{
     constructor(app,_config_){
         this.app = app;
@@ -31,20 +32,34 @@ class Endpoints{
             res.sendFile(file);
         })
 
-        this.app.get('/blog',(req,res)=>{
-            res.render(path.join('pages/blog.html'),{
-                blog:{
-                    title:"super cool short name",
-                    titledesc:"this is a longer form of the title",
-                    content:"This is the main content of the blog post.",
-                    date:"2025.01.01",
-                    readTime:"10"
+        this.app.get('/blog/:userid/:blogid', async (req, res, next) => {
+            try {
+            const { userid, blogid } = req.params;
+            // Fetch blog by blogid
+            const blog = await db.getBlogById(blogid);
+            // Check if blog exists and belongs to userid
+            if (!blog || blog.userid !== userid) {
+                return next()
+            }
+            res.render(path.join('pages/blog.html'), {
+                blog: {
+                title: blog.title,
+                titledesc: blog.titledesc,
+                content: blog.content,
+                date: blog.date,
+                readTime: blog.readTime
                 }
             });
+            } catch (e) {
+            next(e);
+            }
         })
 
         // api endpoints
         api(this.app, this.config);
+        this.app.use((req,res,next)=>{
+            res.status(404).send('Not Found');
+        });
     }
 }
 module.exports = (app, _config_) => {new Endpoints(app, _config_);};

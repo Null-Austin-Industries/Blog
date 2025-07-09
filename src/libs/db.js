@@ -87,6 +87,42 @@ class Database{
             return { ...user, ...newData };
         }
     }(this)
+    blogs = new class {
+        constructor(database) {
+            this.database = database;
+        }
+        createPost(user_id, content, status = 'published') {
+            this.database.db.prepare(
+                `INSERT INTO ${_config_.database.blogsTable} (user_id, content, status) VALUES (?, ?, ?)`
+            ).run(user_id, content, status);
+        }
+        getPostById(id) {
+            return this.database.db.prepare(
+                `SELECT * FROM ${_config_.database.blogsTable} WHERE id = ?`
+            ).get(id);
+        }
+        getAllPosts() {
+            return this.database.db.prepare(
+                `SELECT * FROM ${_config_.database.blogsTable}`
+            ).all();
+        }
+        getPostsByUser(user_id) {
+            return this.database.db.prepare(
+                `SELECT * FROM ${_config_.database.blogsTable} WHERE user_id = ?`
+            ).all(user_id);
+        }
+        updatePost(id, updates) {
+            const set = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+            this.database.db.prepare(
+                `UPDATE ${_config_.database.blogsTable} SET ${set}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
+            ).run(...Object.values(updates), id);
+        }
+        deletePost(id) {
+            this.database.db.prepare(
+                `DELETE FROM ${_config_.database.blogsTable} WHERE id = ?`
+            ).run(id);
+        }
+    }(this)
 }
 
 module.exports = new Database();
