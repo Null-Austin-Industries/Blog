@@ -42,6 +42,8 @@ class Database{
         // Posts
         this.db.prepare(`CREATE TABLE IF NOT EXISTS ${_config_.database.blogsTable} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            display_title TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
             user_id INTEGER NOT NULL DEFAULT -1,
             content TEXT NOT NULL DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -91,10 +93,10 @@ class Database{
         constructor(database) {
             this.database = database;
         }
-        createPost(user_id, content, status = 'published') {
+        createPost(user_id, content, title, display_title, status = 'published') {
             this.database.db.prepare(
-                `INSERT INTO ${_config_.database.blogsTable} (user_id, content, status) VALUES (?, ?, ?)`
-            ).run(user_id, content, status);
+                `INSERT INTO ${_config_.database.blogsTable} (user_id, content, title, display_title, status) VALUES (?, ?, ?, ?, ?)`
+            ).run(user_id, content, title, display_title, status);
         }
         getPostById(id) {
             return this.database.db.prepare(
