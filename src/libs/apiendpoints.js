@@ -1,4 +1,13 @@
 const { performance } = require('perf_hooks');
+const db = require('./db');
+const api = new class API{
+    constructor(){
+        this.init();
+    }
+    init(){
+        
+    }
+}();
 class Endpoints{
     constructor(app,_config_){
         this.app = app;

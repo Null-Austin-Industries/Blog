@@ -18,7 +18,6 @@ const TermColor = require('term-color');
 
 // Local Modules
 const endpoints = require('./libs/endpoints');
-const db = require('./libs/db');
 
 // ------------------------------------
 // Configuration

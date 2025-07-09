@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "test": "node src/app.js --test",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "sass": "sass --watch --style=compressed --no-source-map src/web/scss/:src/web/css"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,11 @@
   "homepage": "https://github.com/Null-Austin-Industries/Blog#readme",
   "dependencies": {
     "better-sqlite3": "^12.2.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "ini": "^5.0.0",
     "perf_hooks": "^0.0.1",
+    "sass": "^1.89.2",
     "term-color": "^1.0.1"
   }
 }
