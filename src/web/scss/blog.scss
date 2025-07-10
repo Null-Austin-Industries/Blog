@@ -14,6 +14,25 @@ div#toc{
     background-color: $bg-toc;
     position:fixed;
     z-index: 1;
+    overflow-y: auto;
+    
+    /* Custom scrollbar for TOC */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: $bg-toc;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $accent-primary;
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: $accent-light;
+    }
 }
 div#blog {
     display: flex;
@@ -55,6 +74,19 @@ div#content {
 @media (max-width: 900px) {
   div#toc {
     display: none;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    height: 100vh;
+    background-color: $bg-toc;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    
+    &.mobile-open {
+      display: block;
+      left: 0;
+    }
   }
   div#content {
     margin-left: 0;
@@ -216,4 +248,59 @@ a{
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
+}
+div#toc{
+  // padding: 1.5rem 1rem;
+  h2{
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  #headers{
+      width: 90%;
+      margin: 0 auto;
+      
+      h1{
+          margin-left: 0;
+          font-size: 0.9rem;
+      }
+      h2{
+          margin-left: 1rem;
+          font-size: 0.85rem;
+      }
+      h3{
+          margin-left: 2rem;
+          font-size: 0.8rem;
+      }
+      h4{
+          margin-left: 3rem;
+          font-size: 0.75rem;
+      }
+      h5{
+          margin-left: 4rem;
+          font-size: 0.7rem;
+      }
+      h6{
+          margin-left: 5rem;
+          font-size: 0.65rem;
+      }
+      
+      h1,h2,h3,h4,h5,h6{
+          color: $text-secondary;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+          text-decoration: none;
+          font-weight: 400;
+      }
+  }
+  #main-toc{
+      text-align: center;
+      margin: 1rem 0 1.5rem 0;
+      color: $text-white;
+  }
+  hr{
+      width: 80%;
+      border: 1px solid $border-primary;
+      margin: 1rem auto;
+  }
 }

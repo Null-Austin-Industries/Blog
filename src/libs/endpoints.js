@@ -2,7 +2,7 @@ const api = require('./apiendpoints');
 const path = require('path');
 let db = require('./db');
 const { read } = require('fs');
-const { markdownToHtml } = require('./md');
+const { markdownToHtml, getEnhancedHtml } = require('./md');
 class Endpoints{
     constructor(app,_config_){
         this.app = app;
@@ -56,14 +56,15 @@ class Endpoints{
             readTime = blog.content.split(' ').length / 200;
             readTime = Math.ceil(readTime);
             
-            // Process markdown content
-            const processedContent = markdownToHtml(blog.content);
+            // Process markdown content and generate TOC
+            const enhanced = getEnhancedHtml(blog.content);
             
             res.render(path.join('pages/blog.html'), {
                 blog: {
                     title: blog.title,
                     titledesc: blog.display_title,
-                    content: processedContent,
+                    content: enhanced.html,
+                    toc: enhanced.toc,
                     date: date,
                     readTime: readTime
                 }

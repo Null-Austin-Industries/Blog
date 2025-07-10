@@ -28,19 +28,24 @@ class Endpoints{
         this.app.post('/api/v1/post', (req, res) => {
             // Merge req.body and req.query to support both body and query/form-data
             const source = { ...req.query, ...req.body };
-            source.content = md.markdownToHtml(source.content);
-            source.toc = md.getTOC(source.content);
-            console.log(source.toc)
+            
+            // Get the original markdown content for TOC generation
+            const originalContent = source.content || '';
+            
+            // Generate enhanced HTML and TOC from original markdown
+            const enhanced = md.getEnhancedHtml(originalContent);
+            
             let data = [
                 source.user_id || 1,
-                source.content || '',
+                enhanced.html, // Use enhanced HTML
                 source.title || '',
                 source.display_title || '',
                 source.status || '1',
-                source.toc || []
+                enhanced.headers // Use the headers array for TOC storage
             ];
-            // res.json(data);
-            // return;
+            
+            console.log('TOC Headers:', enhanced.headers);
+            
             const postId = db.blogs.createPost(...data);
             res.json({
                 message: 'Post created successfully',

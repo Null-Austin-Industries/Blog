@@ -98,17 +98,149 @@ function addMultipleCustomEmojis(emojiMap) {
   }
 }
 
-function getTOC(content){
-    // Simplified version - just return basic markdown conversion
-    const html = markdownToHtml(content);
-    return html;
+function generateRandomSuffix() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 4; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+function extractHeaders(markdown) {
+    const headers = [];
+    const lines = markdown.split('\n');
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        const headerMatch = line.match(/^(#{1,6})\s+(.+)/);
+        
+        if (headerMatch) {
+            const level = headerMatch[1].length;
+            const text = headerMatch[2];
+            // Create a URL-safe ID from the header text
+            let baseId = text.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/-+/g, '-') // Replace multiple hyphens with single
+                .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+            
+            baseId = baseId || `header-${i}`; // Fallback ID if text produces empty string
+            const id = `${baseId}-${generateRandomSuffix()}`;
+            
+            headers.push({
+                level,
+                text,
+                id: id
+            });
+        }
+    }
+    
+    return headers;
+}
+
+function extractHeadersFromHtml(html) {
+    const headers = [];
+    const dom = new JSDOM(`<!DOCTYPE html><html><body>${html}</body></html>`);
+    const document = dom.window.document;
+    
+    const headerElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    
+    headerElements.forEach((element, i) => {
+        const level = parseInt(element.tagName.charAt(1));
+        const text = element.textContent.trim();
+        // Create a URL-safe ID from the header text
+        let baseId = text.toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-') // Replace multiple hyphens with single
+            .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+        
+        baseId = baseId || `header-${i}`; // Fallback ID if text produces empty string
+        const id = `${baseId}-${generateRandomSuffix()}`;
+        
+        headers.push({
+            level,
+            text,
+            id: id
+        });
+    });
+    
+    return headers;
+}
+
+function addIdsToHeaders(html, headers) {
+    // Wrap the HTML in a complete document structure for JSDOM
+    const wrappedHtml = `<!DOCTYPE html><html><body>${html}</body></html>`;
+    const dom = new JSDOM(wrappedHtml);
+    const document = dom.window.document;
+    
+    // Find all header elements
+    const headerElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    let headerIndex = 0;
+    
+    headerElements.forEach((element) => {
+        if (headerIndex < headers.length) {
+            element.id = headers[headerIndex].id;
+            headerIndex++;
+        }
+    });
+    
+    return document.body.innerHTML;
+}
+
+function generateTOCHtml(headers) {
+    if (headers.length === 0) {
+        return '<p>No headers found</p>';
+    }
+    
+    let tocHtml = '';
+    
+    headers.forEach(header => {
+        const marginLeft = (header.level - 1) * 1; // 1rem per level
+        tocHtml += `<h${header.level} style="margin-left: ${marginLeft}rem;">
+            <a href="#${header.id}" style="text-decoration: none; color: inherit;">
+                ${header.text}
+            </a>
+        </h${header.level}>`;
+    });
+    
+    return tocHtml;
+}
+
+function getTOC(content) {
+    const headers = extractHeaders(content);
+    return generateTOCHtml(headers);
 }
 
 function getEnhancedHtml(content) {
-    // Simplified - just return the HTML without TOC
+    let headers = [];
+    let html = '';
+    
+    // Check if content is already HTML (contains HTML tags) or is markdown
+    if (content.includes('<h1>') || content.includes('<h2>') || content.includes('<h3>') || 
+        content.includes('<h4>') || content.includes('<h5>') || content.includes('<h6>')) {
+        // Content is already HTML, extract headers from HTML
+        html = content;
+        headers = extractHeadersFromHtml(content);
+    } else {
+        // Content is markdown, extract headers from markdown first
+        headers = extractHeaders(content);
+        
+        // Convert markdown to HTML
+        html = markdownToHtml(content);
+    }
+    
+    // Add IDs to headers in the HTML
+    html = addIdsToHeaders(html, headers);
+    
+    // Generate TOC HTML
+    const tocHtml = generateTOCHtml(headers);
+    
     return {
-        html: markdownToHtml(content),
-        toc: []
+        html: html,
+        toc: tocHtml,
+        headers: headers
     };
 }
 
@@ -117,5 +249,8 @@ module.exports = {
   getTOC, 
   getEnhancedHtml, 
   addCustomEmoji, 
-  addMultipleCustomEmojis 
+  addMultipleCustomEmojis,
+  extractHeaders,
+  extractHeadersFromHtml,
+  generateTOCHtml
 };
