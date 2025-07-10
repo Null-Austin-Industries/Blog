@@ -128,7 +128,7 @@ class Database{
         }
         getMostRecent(){
             return this.database.db.prepare(
-                `SELECT * FROM ${_config_.database.blogsTable} ORDER BY created_at DESC LIMIT 5`
+                `SELECT * FROM ${_config_.database.blogsTable} ORDER BY created_at DESC LIMIT 1`
             ).all();
         }
     }(this)
