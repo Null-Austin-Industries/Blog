@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Parastoo:wght@400..700&display=swap');
+
+body, html {
+    color: rgb(182, 182, 182);
+    padding: 0;
+    margin: 0;
+    background-color: black;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.post-form {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #121212;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    color: rgb(223, 223, 223);
+    
+    h1 {
+        font-family: "Inconsolata", monospace;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-variation-settings: "wdth" 100;
+        color: white;
+        font-size: 52px;
+        margin-bottom: 2rem;
+    }
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: white;
+        font-family: "Inconsolata", monospace;
+    }
+    
+    small {
+        color: rgb(160, 160, 160);
+        font-size: 0.85em;
+        margin-top: 0.25rem;
+        display: block;
+    }
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #2e2e2e;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    background-color: #1e1e1e;
+    color: #ddd;
+    
+    &:focus {
+        outline: none;
+        border-color: #0050ff;
+        box-shadow: 0 0 0 2px rgba(0, 80, 255, 0.2);
+    }
+}
+
+.form-group textarea {
+    min-height: 300px;
+    resize: vertical;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: #101010;
+    color: #eeeeee;
+    line-height: 1.5;
+}
+
+.submit-btn {
+    background: #0050ff;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: "Inconsolata", monospace;
+    font-weight: 500;
+    
+    &:hover {
+        background: #0040cc;
+    }
+    
+    &:disabled {
+        background: #2e2e2e;
+        cursor: not-allowed;
+        color: #666;
+    }
+}
+
+.success-message {
+    background: #0a3a0a;
+    color: #4caf50;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: none;
+    border: 1px solid #2e5a2e;
+}
+
+.error-message {
+    background: #3a0a0a;
+    color: #f44336;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: none;
+    border: 1px solid #5a2e2e;
+}
+
+.preview-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #2e2e2e;
+    
+    h3 {
+        font-family: "Inconsolata", monospace;
+        color: white;
+        margin-bottom: 1rem;
+    }
+}
+
+.preview-content {
+    background: #0a0a0a;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #2e2e2e;
+    min-height: 200px;
+    color: rgb(223, 223, 223);
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: white;
+        font-family: "Inconsolata", monospace;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+        background-color: #1e1e1e;
+        color: #f97d7d;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    
+    strong {
+        color: white;
+    }
+    
+    em {
+        color: rgb(160, 160, 160);
+        font-style: italic;
+    }
+    
+    a {
+        color: rgb(160, 160, 160);
+        
+        &:hover {
+            color: #0050ff;
+        }
+    }
+}
+
+.autolink {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #0a1a2e;
+    border-radius: 4px;
+    display: none;
+    border: 1px solid #2e4a5e;
+    color: #ddd;
+    
+    strong {
+        color: white;
+    }
+    
+    a {
+        color: #0050ff;
+        text-decoration: none;
+        font-weight: bold;
+        
+        &:hover {
+            text-decoration: underline;
+            color: #2f87ff;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .post-form {
+        margin: 1rem;
+        padding: 1rem;
+        
+        h1 {
+            font-size: 2rem;
+        }
+    }
+}

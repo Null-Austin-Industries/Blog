@@ -2,6 +2,7 @@
 const marked = require('marked');
 const JSDOM = require('jsdom').JSDOM;
 const Prism = require('prismjs');
+const emoji = require('node-emoji');
 
 // Load additional language components for syntax highlighting
 require('prismjs/components/prism-javascript');
@@ -14,7 +15,37 @@ require('prismjs/components/prism-bash');
 require('prismjs/components/prism-sql');
 require('prismjs/components/prism-markdown');
 
+// Custom emoji mappings
+const customEmojis = {
+  blog: '📝',
+  austin: '🤠',
+  coffee_code: '☕💻',
+  thinking_face: '🤔',
+  party_blob: '🎉',
+  custom_heart: '💖',
+  sparkles: '✨',
+  wave_hello: '👋',
+  code_ninja: '👨‍💻🥷',
+  bug_hunter: '🐛🔍'
+};
+
+function processCustomEmojis(text) {
+  let processedText = text;
+  
+  // First process custom emojis
+  for (const [name, emojiChar] of Object.entries(customEmojis)) {
+    const regex = new RegExp(`:${name}:`, 'g');
+    processedText = processedText.replace(regex, emojiChar);
+  }
+  
+  // Then process standard emojis
+  return emoji.emojify(processedText);
+}
+
 function markdownToHtml(markdown) {
+  // Process emojis (custom and standard) before markdown conversion
+  const emojiProcessed = processCustomEmojis(markdown);
+  
   // Configure marked with extensions for code highlighting
   marked.use({
     renderer: {
@@ -52,7 +83,19 @@ function markdownToHtml(markdown) {
     breaks: true
   });
 
-  return marked.parse(markdown);
+  return marked.parse(emojiProcessed);
+}
+
+// Function to add a single custom emoji
+function addCustomEmoji(name, emojiChar) {
+  customEmojis[name] = emojiChar;
+}
+
+// Function to add multiple custom emojis at once
+function addMultipleCustomEmojis(emojiMap) {
+  for (const [name, emojiChar] of Object.entries(emojiMap)) {
+    customEmojis[name] = emojiChar;
+  }
 }
 
 function getTOC(content){
@@ -69,4 +112,10 @@ function getEnhancedHtml(content) {
     };
 }
 
-module.exports = { markdownToHtml, getTOC, getEnhancedHtml };
+module.exports = { 
+  markdownToHtml, 
+  getTOC, 
+  getEnhancedHtml, 
+  addCustomEmoji, 
+  addMultipleCustomEmojis 
+};
