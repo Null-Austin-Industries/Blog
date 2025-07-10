@@ -126,6 +126,11 @@ class Database{
                 `DELETE FROM ${_config_.database.blogsTable} WHERE id = ?`
             ).run(id);
         }
+        getMostRecent(){
+            return this.database.db.prepare(
+                `SELECT * FROM ${_config_.database.blogsTable} ORDER BY created_at DESC LIMIT 5`
+            ).all();
+        }
     }(this)
 }
 
