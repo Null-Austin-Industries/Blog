@@ -1,15 +1,17 @@
+@use '_colors' as *;
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Parastoo:wght@400..700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css');
+
 body,html{
-    color: rgb(182, 182, 182);
+    color: $text-secondary;
     padding: 0;
     margin: 0;
-    background-color: black;
+    background-color: $bg-primary;
 }
 div#toc{
     width: 20%;
     min-height: 100vh;
-    background-color: rgb(10, 10, 10);
+    background-color: $bg-toc;
     position:fixed;
     z-index: 1;
 }
@@ -24,25 +26,23 @@ div#content {
     width: 80%;
     min-height: 100vh;
     #extraInfo {
-      background-color: #0050ff;
-      color: white;
+      background-color: $accent-primary;
+      color: $text-white;
       padding: 0.1rem .5rem;
       font-size: .8rem;
       letter-spacing: 1px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      /*border-bottom: 2px solid white;*/
+      box-shadow: 0 4px 10px $shadow-primary;
   }
   div#text{
-    color: rgb(223, 223, 223);
+    color: $text-primary;
     width: 85%;
     margin: 0 auto;
     margin-top: 25px;
     h1,h2,h3,h4,h5,h6{
-      // text-align: center;
-      color: white;
+      color: $text-white;
     }
     h1{
       font-size: 52px;
@@ -79,35 +79,36 @@ div#content {
     content: '▶';
   }
 }
+
 /* Better Tables - Dark Theme */
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 1em 0;
   font-size: 0.95rem;
-  background-color: #121212; /* deep charcoal */
-  border: 1px solid #2e2e2e;
+  background-color: $bg-secondary;
+  border: 1px solid $border-primary;
   color: #ddd;
 }
 
 table th,
 table td {
-  border: 1px solid #2e2e2e;
+  border: 1px solid $border-primary;
   padding: 0.6em 0.9em;
   text-align: left;
 }
 
 table th {
-  background-color: #1e1e1e;
+  background-color: $bg-tertiary;
   font-weight: 600;
-  color: #fff;
+  color: $text-white;
 }
 
 /* Better Code Blocks - Dark Theme with Prism.js */
 code {
   font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
-  background-color: #1e1e1e;
-  color: #f97d7d;
+  background-color: $bg-tertiary;
+  color: $text-code;
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.95em;
@@ -117,8 +118,8 @@ code {
 
 // Inline code
 code.inline-code {
-  background-color: #1e1e1e;
-  color: #f97d7d;
+  background-color: $bg-tertiary;
+  color: $text-code;
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
@@ -132,7 +133,7 @@ pre[class*="language-"] {
   padding: 1em;
   border-radius: 8px;
   overflow-x: auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px $shadow-secondary;
   background-color: #2d2d2d !important;
   border: none !important;
   
@@ -152,8 +153,8 @@ pre[class*="language-"] {
 // Fallback for non-Prism code blocks
 pre code {
   display: block;
-  background-color: #101010;
-  color: #eeeeee;
+  background-color: $bg-quaternary;
+  color: $text-code-bg;
   padding: 1em;
   overflow-x: auto;
   border-radius: 6px;
@@ -165,14 +166,14 @@ pre code {
 
 /* 💬 Fancy Blockquotes - Dark Theme */
 blockquote {
-  border-left: 4px solid #2f87ff;
-  background-color: #0a0a0a;
+  border-left: 4px solid $accent-light;
+  background-color: $bg-dark;
   color: #aaa;
   padding: 0.8em 1.2em;
   margin: 1em 0;
   font-style: italic;
   position: relative;
-  box-shadow: inset 4px 0 0 #2f87ff33;
+  box-shadow: inset 4px 0 0 $accent-shadow;
 }
 
 blockquote::before {
@@ -182,12 +183,12 @@ blockquote::before {
   position: absolute;
   left: 10px;
   top: -10px;
-  color: #2f87ff;
+  color: $accent-light;
   opacity: 0.2;
 }
 
 a{
-  color: rgb(160, 160, 160);
+  color: $text-muted;
 }
 
 /* fonts */

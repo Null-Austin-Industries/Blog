@@ -1,0 +1,43 @@
+// Color Palette for Blog Theme
+// Modify these variables to change the entire color scheme
+
+// Background Colors
+$bg-primary: black;
+$bg-secondary: #121212;
+$bg-tertiary: #1e1e1e;
+$bg-quaternary: #101010;
+$bg-dark: #0a0a0a;
+$bg-toc: rgb(10, 10, 10);
+
+// Text Colors
+$text-primary: rgb(223, 223, 223);
+$text-secondary: rgb(182, 182, 182);
+$text-muted: rgb(160, 160, 160);
+$text-white: white;
+$text-code: #f97d7d;
+$text-code-bg: #eeeeee;
+
+// Border Colors
+$border-primary: #2e2e2e;
+$border-secondary: #2e4a5e;
+$border-success: #2e5a2e;
+$border-error: #5a2e2e;
+
+// Accent Colors
+$accent-primary: #0050ff;
+$accent-hover: #0040cc;
+$accent-light: #2f87ff;
+$accent-disabled: #666;
+
+// Status Colors
+$success-bg: #0a3a0a;
+$success-text: #4caf50;
+$error-bg: #3a0a0a;
+$error-text: #f44336;
+$info-bg: #0a1a2e;
+
+// Shadows and Effects
+$shadow-primary: rgba(0, 0, 0, 0.4);
+$shadow-secondary: rgba(0, 0, 0, 0.2);
+$focus-shadow: rgba(0, 80, 255, 0.2);
+$accent-shadow: rgba(47, 135, 255, 0.2);
