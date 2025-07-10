@@ -12,7 +12,7 @@ class Endpoints{
     init(){
         // static endpoints
         this.app.get('/',(req,res)=>{
-            res.send('lol')
+            res.render(path.join('pages/home.html'))
         })
 
         this.app.get('/post',(req,res)=>{
