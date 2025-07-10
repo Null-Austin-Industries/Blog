@@ -72,6 +72,24 @@ div#main{
         }
     }
 }
+// @media (max-height:900px) {
+//     div#main{
+//         // min-height: 0;
+//         max-width: 89%;
+//         p#info{
+//             width: 100% !important;
+//         }
+//     }
+// }
+@media (max-width:900px) {
+    div#main{
+        min-height: 120vh;
+        max-width: 89%;
+        p#info{
+            width: 100% !important;
+        }
+    }
+}
 // .inter,#text{
 //   font-family: "Inter", sans-serif;
 //   font-optical-sizing: auto;
