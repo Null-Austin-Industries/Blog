@@ -4,10 +4,11 @@
 // Background Colors
 $bg-primary: black;
 $bg-secondary: #121212;
-$bg-tertiary: #1e1e1e;
+$bg-tertiary: #222222;
 $bg-quaternary: #101010;
 $bg-dark: #0a0a0a;
 $bg-toc: rgb(10, 10, 10);
+$bg-style:rgb(19, 19, 19);
 
 // Text Colors
 $text-primary: rgb(223, 223, 223);
@@ -16,6 +17,7 @@ $text-muted: rgb(160, 160, 160);
 $text-white: white;
 $text-code: #f97d7d;
 $text-code-bg: #eeeeee;
+$dark-gray: rgb(73, 73, 73);
 
 // Border Colors
 $border-primary: #2e2e2e;
@@ -41,3 +43,9 @@ $shadow-primary: rgba(0, 0, 0, 0.4);
 $shadow-secondary: rgba(0, 0, 0, 0.2);
 $focus-shadow: rgba(0, 80, 255, 0.2);
 $accent-shadow: rgba(47, 135, 255, 0.2);
+$blue-shadow: rgb(6, 110, 228);
+
+// misc
+$blue-1:#2f87ff;
+$blue-2:#5aa3ff;
+$white:#fff;

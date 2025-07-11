@@ -1,18 +1,18 @@
-@use '_colors';
+@use '_colors' as *;
 @use 'blog';
 div#main{
-    background-color: rgb(19, 19, 19);
+    background-color: $bg-style;
     min-height: 95vh;
     max-width: 65%;
     margin: 0 auto;
     margin-top: 25px;
     margin-bottom: 25px;
     min-height: 120vh;
-    border: 1px rgb(77, 77, 77) solid;
+    border: 1px $border-secondary solid;
     border-radius: 5px;
     padding: 20px;
     padding-top: 5px;
-    color: white;
+    color: $white;
     text-align: center;
     h1{
         font-size: 2.8rem;
@@ -21,27 +21,27 @@ div#main{
         width: 55%;
         margin: 0 auto;
         text-align: left;
-        color: rgb(214, 214, 214);
+        color: $text-secondary;
     }
     div#most-recent{
-        background-color: #1a1a1a;
+        background-color: $bg-secondary;
         width: 45%;
         margin: 2rem auto;
         padding: 1.5rem;
         padding-bottom: 0;
         border-radius: 12px;
-        border: 1px solid #333;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px $border-secondary solid;
+        box-shadow: 0 4px 12px $shadow-primary;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 20px $shadow-primary;
         }
         div#recent{
-            border: 1px rgb(51, 51, 51) solid;
+            border: 1px $accent-shadow solid;
             border-radius: 10px;
-            background-color: rgb(34, 34, 34);
+            background-color: $bg-tertiary;
             span{
                 h2{
                     text-align: center;
@@ -55,22 +55,22 @@ div#main{
                 span{
                     text-align: center;
                     margin-top: 0px;
-                    color: rgb(73, 73, 73);
+                    color: $dark-gray;
                     margin-bottom: 15px;
                 }
             }
             margin-bottom: 10px;
             padding-top: 15px;
             transition: .3s;
-            box-shadow: 0px 1px 1px rgb(6, 110, 228);
+            box-shadow: 0px 1px 1px $blue-shadow;
         }
-        div#recent:hover{
-            transform: scale(1.05);
-        }
+        // div#recent:hover{
+        //     transform: scale(1.05);
+        // }
         h2 {
             margin-top: 0;
             margin-bottom: 1rem;
-            color: #fff;
+            color: $white;
             font-size: 1.4rem;
             text-align: left;
         }
@@ -81,20 +81,19 @@ div#main{
         }
         
         a {
-            color: #2f87ff;
+            color: $blue-1;
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: 500;
             transition: color 0.2s ease;
             
             &:hover {
-                color: #5aa3ff;
+                color: $blue-2;
                 text-decoration: underline;
             }
         }
         
         p {
-            color: #b6b6b6;
             margin-top: 0.5rem;
             margin-bottom: 0;
             line-height: 1.4;
