@@ -5,9 +5,10 @@ let db = require('./db');
 const { read } = require('fs');
 const { markdownToHtml, getEnhancedHtml } = require('./md');
 class Endpoints{
-    constructor(app,_config_){
+    constructor(app,_config_, test){
         this.app = app;
         this.config = _config_;
+        this.test = test;
         this.init();
     }
     init(){
@@ -44,6 +45,9 @@ class Endpoints{
 
         this.app.use('/curator/:a', (req,res,next)=>{
             let token = req.cookies.token;
+            if (this.test){
+                return next();
+            }
             if (!token) {
                 return res.redirect('/login');
             }
@@ -59,6 +63,9 @@ class Endpoints{
         })
 
         this.app.use('/admin/:a', (req,res,next)=>{
+            if (this.test){
+                return next();
+            }
             let token = req.cookies.token;
             if (!token) {
                 return res.redirect('/login');
@@ -67,7 +74,11 @@ class Endpoints{
             if (!user) {
                 return res.redirect('/login');
             }
-            JSON.parse(user.permissions).includes('curator') ? next() : res.status(403).send('Forbidden');
+            JSON.parse(user.permissions).includes('admin') ? next() : res.status(403).send('Forbidden');
+        })
+
+        this.app.get('/admin/createUser',(req,res)=>{
+            res.sendFile(path.join(__dirname,'../web/pages/createUser.html'));
         })
 
         // dynamic endpoints

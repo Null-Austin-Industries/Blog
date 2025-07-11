@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin's Blog - Create User</title>
+    <link rel="stylesheet" href="/css/blog.css">
+    <link rel="stylesheet" href="/css/post.css">
+</head>
+<body>
+    <div class="post-form">
+        <h1>Create New User</h1>
+        
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="userForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+                <small>This will be used for login</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="user@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+                <small>Minimum 8 characters recommended</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="permissions">Permissions:</label>
+                <select id="permissions" name="permissions" multiple>
+                    <option value="user">User</option>
+                    <option value="curator">Curator</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <small>Hold Ctrl/Cmd to select multiple permissions</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">Create User</button>
+        </form>
+        
+        <div class="autolink" id="autolink">
+            <strong>User created successfully!</strong><br>
+            <span id="userInfo"></span>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        document.getElementById('userForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const autolink = document.getElementById('autolink');
+            const userInfo = document.getElementById('userInfo');
+            
+            // Clear previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            autolink.style.display = 'none';
+            
+            // Validate passwords match
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Error: Passwords do not match';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Handle multiple permissions
+                const permissionsSelect = document.getElementById('permissions');
+                const selectedPermissions = Array.from(permissionsSelect.selectedOptions).map(option => option.value);
+                data.permissions = JSON.stringify(selectedPermissions);
+                
+                // Remove confirmPassword from data
+                delete data.confirmPassword;
+                
+                const response = await fetch('/api/v1/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    successMessage.textContent = result.message;
+                    successMessage.style.display = 'block';
+                    
+                    // Show user info
+                    userInfo.textContent = `Username: ${data.username} | Email: ${data.email} | Permissions: ${selectedPermissions.join(', ')}`;
+                    autolink.style.display = 'block';
+                    
+                    // Reset form
+                    this.reset();
+                } else {
+                    throw new Error(result.message || 'Failed to create user');
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Error: ' + error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create User';
+            }
+        });
+        
+        // Username validation - make it URL friendly
+        document.getElementById('username').addEventListener('input', function() {
+            this.value = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9_]/g, '')
+                .replace(/_+/g, '_');
+        });
+        
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const confirmField = document.getElementById('confirmPassword');
+            
+            // Simple password strength check
+            if (password.length < 8) {
+                this.style.borderColor = '#ff6b6b';
+            } else if (password.length >= 8 && /[A-Za-z]/.test(password) && /[0-9]/.test(password)) {
+                this.style.borderColor = '#51cf66';
+            } else {
+                this.style.borderColor = '#ffd43b';
+            }
+            
+            // Check if passwords match
+            if (confirmField.value && password !== confirmField.value) {
+                confirmField.style.borderColor = '#ff6b6b';
+            } else if (confirmField.value && password === confirmField.value) {
+                confirmField.style.borderColor = '#51cf66';
+            }
+        });
+        
+        // Confirm password validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            
+            if (this.value && password !== this.value) {
+                this.style.borderColor = '#ff6b6b';
+            } else if (this.value && password === this.value) {
+                this.style.borderColor = '#51cf66';
+            }
+        });
+    </script>
+</body>
+</html>

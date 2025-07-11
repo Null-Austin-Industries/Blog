@@ -5,6 +5,8 @@
 // Modules
 // ------------------------------------
 
+const test = process.argv.includes('--test');
+
 // Express Related Modules
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -48,7 +50,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'web'));
 
 // pass the app via the endpoints module
-endpoints(app, _config_);
+endpoints(app, _config_, test);
 
 // set up listening
 const port = _config_.general.port || 3000

@@ -6,6 +6,13 @@ const path = require('node:path');
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 
+function hash(input) {
+    const salt = crypto.createHash('sha256').update(input).digest('hex');
+    const combined = input + salt;
+    const hash2 = crypto.createHash('sha512').update(combined).digest('hex');
+    return hash2;
+}
+
 // Configuration
 const ini = require('ini');
 const _config_ = ini.parse(fs.readFileSync(path.join(__dirname,'../config/general.ini'), 'utf-8'));
@@ -61,7 +68,7 @@ class Database{
             return crypto.randomBytes(length).toString('hex');
         }
         createUser(username,password,email = null,profile_picture = 'default.png',bio = '',is_active = 0,permissions = ['user'],display_name = ''){
-            this.database.db.prepare(`INSERT INTO ${_config_.database.userTable} (username,password,email,profile_picture,bio,is_active,permissions,display_name) VALUES (?,?,?,?,?,?,?,?)`).run(username,password,email,profile_picture,bio,is_active,JSON.stringify(permissions),display_name);
+            this.database.db.prepare(`INSERT INTO ${_config_.database.userTable} (username,password,email,profile_picture,bio,is_active,permissions,display_name) VALUES (?,?,?,?,?,?,?,?)`).run(username,hash(password),email,profile_picture,bio,is_active,JSON.stringify(permissions),display_name);
         }
         getUserById(id){
             return this.database.db.prepare(`SELECT * FROM ${_config_.database.userTable} WHERE id = ?`).get(id);
@@ -80,6 +87,7 @@ class Database{
             return this.database.db.prepare(`SELECT * FROM ${_config_.database.userTable} WHERE username = ?`).get(username);
         }
         login(username,password){
+            password = hash(password);
             let user = this.getUser(username);
             if (!user) return null;
             if (user.password !== password) return null;
