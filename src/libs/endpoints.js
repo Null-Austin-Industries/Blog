@@ -38,8 +38,36 @@ class Endpoints{
             res.render(path.join('pages/home.html'),{recent:html});
         })
 
-        this.app.get('/post',(req,res)=>{
+        this.app.get('/login',(req,res)=>{
+            res.sendFile(path.join(__dirname,'../web/pages/login.html'));
+        })
+
+        this.app.use('/curator/:a', (req,res,next)=>{
+            let token = req.cookies.token;
+            if (!token) {
+                return res.redirect('/login');
+            }
+            let user = db.users.getUserByToken(token);
+            if (!user) {
+                return res.redirect('/login');
+            }
+            JSON.parse(user.permissions).includes('curator') ? next() : res.status(403).send('Forbidden');
+        })
+
+        this.app.get('/curator/post',(req,res)=>{
             res.sendFile(path.join(__dirname,'../web/pages/post.html'));
+        })
+
+        this.app.use('/admin/:a', (req,res,next)=>{
+            let token = req.cookies.token;
+            if (!token) {
+                return res.redirect('/login');
+            }
+            let user = db.users.getUserByToken(token);
+            if (!user) {
+                return res.redirect('/login');
+            }
+            JSON.parse(user.permissions).includes('curator') ? next() : res.status(403).send('Forbidden');
         })
 
         // dynamic endpoints
@@ -98,7 +126,11 @@ class Endpoints{
         })
 
         // api endpoints
+        console.log('Loading API endpoints...');
         api(this.app, this.config);
+        console.log('API endpoints loaded.');
+        
+        // 404 handler - must be last
         this.app.use((req,res,next)=>{
             res.status(404).send('Not Found');
         });

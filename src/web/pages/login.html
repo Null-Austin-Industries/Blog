@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin's Blog - Login</title>
+    <link rel="stylesheet" href="/css/blog.css">
+    <style>
+        /* Login page specific styles - overriding blog.css */
+        .login-form {
+            max-width: 500px;
+            margin: 4rem auto;
+            padding: 3rem;
+            background: #121212;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            color: #dfdfdf;
+            border: 1px solid #2e2e2e;
+        }
+
+        .login-form h1 {
+            font-family: "Inconsolata", monospace;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 80, 255, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #fff;
+            font-family: "Inconsolata", monospace;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #2e2e2e;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: "Inter", sans-serif;
+            box-sizing: border-box;
+            background-color: #222;
+            color: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0050ff;
+            box-shadow: 0 0 0 3px rgba(0, 80, 255, 0.2);
+            background-color: #2a2a2a;
+        }
+
+        .form-group input:hover {
+            border-color: #404040;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0050ff, #2f87ff);
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Inconsolata", monospace;
+            font-weight: 500;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 80, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #0040cc, #1f77ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 80, 255, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            background: #2e2e2e;
+            cursor: not-allowed;
+            color: #666;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message {
+            background: #0a3a0a;
+            color: #4caf50;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+            border: 1px solid #2e5a2e;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #3a0a0a;
+            color: #f44336;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+            border: 1px solid #5a2e2e;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .blog-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #2e2e2e;
+        }
+
+        .blog-link a {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-family: "Inter", sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .blog-link a:hover {
+            color: #0050ff;
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .login-form {
+                margin: 2rem 1rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .login-form h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h1>Login</h1>
+        
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Sign In
+            </button>
+        </form>
+        
+        <div class="blog-link">
+            <a href="/blog">← Back to Blog</a>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Clear previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Disable submit button and show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = 'Signing In <span class="loading"></span>';
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                const response = await fetch('/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    // Login successful
+                    successMessage.textContent = 'Login successful! Redirecting...';
+                    successMessage.style.display = 'block';
+                    
+                    // Wait a moment to show success message, then redirect
+                    setTimeout(() => {
+                        window.location.href = '/post';
+                    }, 1000);
+                } else {
+                    // Login failed
+                    let errorText = 'Login failed. Please check your credentials.';
+                    
+                    try {
+                        const result = await response.json();
+                        errorText = result.message || errorText;
+                    } catch (e) {
+                        // If response is not JSON, use default error message
+                    }
+                    
+                    throw new Error(errorText);
+                }
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+                
+                // Re-enable form after a short delay
+                setTimeout(() => {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In';
+                }, 1000);
+            }
+        });
+        
+        // Add some nice keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Allow Enter to submit the form when focused on any input
+            if (e.key === 'Enter' && (e.target.id === 'username' || e.target.id === 'password')) {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // Focus on username field when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>

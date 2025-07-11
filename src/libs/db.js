@@ -89,6 +89,9 @@ class Database{
             this.modifyUser(user.id, newData);
             return { ...user, ...newData };
         }
+        getUserByToken(token){
+            return this.database.db.prepare(`SELECT * FROM ${_config_.database.userTable} WHERE token = ?`).get(token);
+        }
     }(this)
     blogs = new class {
         constructor(database) {

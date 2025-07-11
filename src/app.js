@@ -7,6 +7,7 @@
 
 // Express Related Modules
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const ini = require('ini');
 
 // Node.js Modules
@@ -40,6 +41,8 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'web'));

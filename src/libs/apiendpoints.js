@@ -16,6 +16,33 @@ class Endpoints{
         this.init();
     }
     init(){
+        console.log('Registering API endpoints...');
+        // user management endpoints
+        this.app.post('/signin',(req,res)=>{
+            // Merge req.body and req.query to support both JSON and form-data
+            const formData = { ...req.query, ...req.body };
+            const { username, password } = formData;
+
+            let data = db.users.login(username,password)
+            if (!data) {
+                return res.status(401).json({ message: 'Invalid username or password' });
+            }
+            let age = 1000 // one second
+            age *= 60 // one minute
+            age *= 60 // one hour
+            age *= 24 // one day
+            age *= 7 // one week
+            res.cookie('token',data.token,{
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: age
+            })
+            res.json({ message: 'Login successful', user: data.username });
+        })
+        console.log('Signin endpoint registered at POST /signin');
+
+        // misc endpoints
         this.app.get('/api/v1/ping', (req, res) => {
             const start = performance.now();
             const end = performance.now();
