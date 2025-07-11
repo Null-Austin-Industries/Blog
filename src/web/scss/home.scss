@@ -28,6 +28,7 @@ div#main{
         width: 45%;
         margin: 2rem auto;
         padding: 1.5rem;
+        padding-bottom: 0;
         border-radius: 12px;
         border: 1px solid #333;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -37,7 +38,35 @@ div#main{
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
-        
+        div#recent{
+            border: 1px rgb(51, 51, 51) solid;
+            border-radius: 10px;
+            background-color: rgb(34, 34, 34);
+            span{
+                h2{
+                    text-align: center;
+                }
+                a{
+                    font-size: 1.9rem;
+                }
+                a::after{
+                    content: '...';
+                }
+                span{
+                    text-align: center;
+                    margin-top: 0px;
+                    color: rgb(73, 73, 73);
+                    margin-bottom: 15px;
+                }
+            }
+            margin-bottom: 10px;
+            padding-top: 15px;
+            transition: .3s;
+            box-shadow: 0px 1px 1px rgb(6, 110, 228);
+        }
+        div#recent:hover{
+            transform: scale(1.05);
+        }
         h2 {
             margin-top: 0;
             margin-bottom: 1rem;

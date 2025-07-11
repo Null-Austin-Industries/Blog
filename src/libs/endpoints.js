@@ -1,5 +1,6 @@
 const api = require('./apiendpoints');
 const path = require('path');
+const JSDOM = require('jsdom').JSDOM;
 let db = require('./db');
 const { read } = require('fs');
 const { markdownToHtml, getEnhancedHtml } = require('./md');
@@ -12,7 +13,29 @@ class Endpoints{
     init(){
         // static endpoints
         this.app.get('/',(req,res)=>{
-            res.render(path.join('pages/home.html'))
+            let mostRecentBlog = db.blogs.getMostRecent();
+            let title = mostRecentBlog[0].display_title;
+            let id = mostRecentBlog[0].id;
+            let uid = mostRecentBlog[0].user_id;
+
+            let _date = new Date(mostRecentBlog[0].created_at);
+            _date = _date.getFullYear() + '.' + String(_date.getMonth() + 1).padStart(2, '0') + '.' + String(_date.getDate()).padStart(2, '0');
+
+            let document = new JSDOM(mostRecentBlog[0].content).window.document;
+
+            let link = document.createElement('a');
+            link.href = `/blog/${uid}/${id}`;
+            link.textContent = title;
+
+            let h2 = document.createElement('h2');
+            h2.innerHTML = link.outerHTML;
+
+            let date = document.createElement('span');
+            date.textContent = _date;
+
+            let html = h2.outerHTML + '<br>' + date.outerHTML
+
+            res.render(path.join('pages/home.html'),{recent:html});
         })
 
         this.app.get('/post',(req,res)=>{
